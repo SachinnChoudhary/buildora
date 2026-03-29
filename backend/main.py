@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 # Dynamic CORS: production Netlify URL + local dev origins
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "https://buildoralabs.netlify.app")
 
 allowed_origins = [
     FRONTEND_URL,
