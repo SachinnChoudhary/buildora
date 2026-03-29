@@ -41,9 +41,12 @@ class Order(Base):
     buyer_id = Column(Integer, ForeignKey("users.id"))
     amount = Column(Float)
     status = Column(String, default="pending") # pending, completed, failed
+    provider = Column(String, default="razorpay") # razorpay, phonepe
+    merchant_order_id = Column(String, nullable=True) # generic field for both
     razorpay_order_id = Column(String, nullable=True)
     razorpay_payment_id = Column(String, nullable=True)
     razorpay_signature = Column(String, nullable=True)
+    phonepe_transaction_id = Column(String, nullable=True)
     
     project = relationship("Project", back_populates="orders")
     buyer = relationship("User", back_populates="orders")

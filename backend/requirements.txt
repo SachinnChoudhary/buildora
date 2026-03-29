@@ -13,3 +13,4 @@ sentry-sdk[fastapi]
 firebase-admin==6.5.0
 slowapi==0.1.9
 razorpay==1.5.0
+phonepe-sdk==1.1.0

@@ -15,3 +15,9 @@ export const API_BASE = import.meta.env.VITE_API_BASE_URL || (isProd
   ? 'https://buildora-api-lqlk.onrender.com'
   : 'http://127.0.0.1:8001');
 
+export const config = {
+  RAZORPAY_KEY_ID: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_mock',
+  PHONEPE_MERCHANT_ID: import.meta.env.VITE_PHONEPE_MERCHANT_ID || 'PGMERCULT',
+  PHONEPE_ENV: import.meta.env.VITE_PHONEPE_ENV || 'SANDBOX'
+};
+

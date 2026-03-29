@@ -10,7 +10,7 @@ from slowapi.errors import RateLimitExceeded
 
 from . import models
 from .database import engine
-from .routers import marketplace, custom_requests, auth, orders
+from .routers import marketplace, custom_requests, auth, orders, phonepe
 
 # Rate limiting setup
 limiter = Limiter(key_func=get_remote_address)
@@ -77,3 +77,4 @@ app.include_router(marketplace.router)
 app.include_router(custom_requests.router)
 app.include_router(auth.router)
 app.include_router(orders.router)
+app.include_router(phonepe.router)

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
-import config from '../js/config';
+import { API_BASE, config } from '../js/config';
 import { getAuth } from 'firebase/auth';
 import '../css/checkout.css';
 
@@ -13,11 +13,12 @@ const CheckoutPage = () => {
     const [loading, setLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' or 'phonepe'
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const response = await fetch(`${config.API_BASE_URL}/api/projects/${projectId}`);
+                const response = await fetch(`${API_BASE}/api/projects/${projectId}`);
                 if (!response.ok) throw new Error('Project not found');
                 const data = await response.json();
                 setProject(data);
@@ -34,12 +35,20 @@ const CheckoutPage = () => {
         setIsProcessing(true);
         setError(null);
 
+        if (paymentMethod === 'razorpay') {
+            await handleRazorpay();
+        } else {
+            await handlePhonePe();
+        }
+    };
+
+    const handleRazorpay = async () => {
         try {
             const auth = getAuth();
             const token = await auth.currentUser?.getIdToken();
             
             // 1. Create Razorpay Order on Backend
-            const orderResponse = await fetch(`${config.API_BASE_URL}/api/orders/create-razorpay-order`, {
+            const orderResponse = await fetch(`${API_BASE}/api/orders/create-razorpay-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,14 +59,14 @@ const CheckoutPage = () => {
 
             if (!orderResponse.ok) {
                 const errorData = await orderResponse.json();
-                throw new Error(errorData.detail || 'Failed to initialize payment');
+                throw new Error(errorData.detail || 'Failed to initialize Razorpay');
             }
 
             const orderData = await orderResponse.json();
 
             // 2. Configure Razorpay Options
             const options = {
-                key: orderData.key_id,
+                key: config.RAZORPAY_KEY_ID,
                 amount: orderData.amount,
                 currency: orderData.currency,
                 name: "Buildora Marketplace",
@@ -66,7 +75,7 @@ const CheckoutPage = () => {
                 handler: async (response) => {
                     // 3. Verify Payment on Backend
                     try {
-                        const verifyResponse = await fetch(`${config.API_BASE_URL}/api/orders/verify-payment`, {
+                        const verifyResponse = await fetch(`${API_BASE}/api/orders/verify-payment`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -97,21 +106,51 @@ const CheckoutPage = () => {
                     color: "#6366f1",
                 },
                 modal: {
-                    ondismiss: () => {
-                        setIsProcessing(false);
-                    }
+                    ondismiss: () => setIsProcessing(false)
                 }
             };
 
             const rzp = new window.Razorpay(options);
             rzp.open();
-
         } catch (err) {
             setError(err.message);
             setIsProcessing(false);
         }
     };
 
+    const handlePhonePe = async () => {
+        try {
+            const auth = getAuth();
+            const token = await auth.currentUser?.getIdToken();
+
+            // 1. Create PhonePe Order on Backend
+            const orderResponse = await fetch(`${API_BASE}/api/phonepe/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ project_id: parseInt(projectId) })
+            });
+
+            if (!orderResponse.ok) {
+                const errorData = await orderResponse.json();
+                throw new Error(errorData.detail || 'Failed to initialize PhonePe');
+            }
+
+            const orderData = await orderResponse.json();
+
+            // 2. Redirect to PhonePe Payment Page
+            if (orderData.redirect_url) {
+                window.location.href = orderData.redirect_url;
+            } else {
+                throw new Error('No redirect URL received from PhonePe');
+            }
+        } catch (err) {
+            setError(err.message);
+            setIsProcessing(false);
+        }
+    };
     if (loading) return <div className="loading-container">Loading checkout...</div>;
     if (!project) return <div className="error-container">Project not found</div>;
 
@@ -127,9 +166,39 @@ const CheckoutPage = () => {
                         <div className="payment-card-status">
                             <div className="shield-icon">🛡️</div>
                             <h2 className="checkout-title">Secure Checkout</h2>
-                            <p className="checkout-subtitle">Secure payment via Razorpay. Fast, safe, and reliable.</p>
+                            <p className="checkout-subtitle">Choose your preferred secure payment method.</p>
                             
                             {error && <div className="error-alert">{error}</div>}
+
+                            <div className="payment-methods-selector">
+                                <label className={`method-option ${paymentMethod === 'razorpay' ? 'active' : ''}`}>
+                                    <input 
+                                        type="radio" 
+                                        name="payment" 
+                                        value="razorpay" 
+                                        checked={paymentMethod === 'razorpay'} 
+                                        onChange={() => setPaymentMethod('razorpay')}
+                                    />
+                                    <div className="method-info">
+                                        <span className="method-name">Razorpay</span>
+                                        <span className="method-desc">Cards, Netbanking, UPI</span>
+                                    </div>
+                                </label>
+
+                                <label className={`method-option ${paymentMethod === 'phonepe' ? 'active' : ''}`}>
+                                    <input 
+                                        type="radio" 
+                                        name="payment" 
+                                        value="phonepe" 
+                                        checked={paymentMethod === 'phonepe'} 
+                                        onChange={() => setPaymentMethod('phonepe')}
+                                    />
+                                    <div className="method-info">
+                                        <span className="method-name">PhonePe</span>
+                                        <span className="method-desc">UPI, Wallet, Cards</span>
+                                    </div>
+                                </label>
+                            </div>
 
                             <div className="payment-details-box">
                                 <div className="detail-row">
@@ -137,8 +206,8 @@ const CheckoutPage = () => {
                                     <span>INR (Indian Rupee)</span>
                                 </div>
                                 <div className="detail-row">
-                                    <span>Method</span>
-                                    <span>UPI / Card / Netbanking</span>
+                                    <span>Gateway</span>
+                                    <span style={{ textTransform: 'capitalize' }}>{paymentMethod}</span>
                                 </div>
                             </div>
 
@@ -153,7 +222,7 @@ const CheckoutPage = () => {
                                         Initializing...
                                     </>
                                 ) : (
-                                    `Proceed to Pay ₹${project.tier1_price}`
+                                    `Proceed with ${paymentMethod === 'razorpay' ? 'Razorpay' : 'PhonePe'} — ₹${project.tier1_price}`
                                 )}
                             </button>
                             
