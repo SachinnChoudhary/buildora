@@ -1,0 +1,124 @@
+/* project_details.css */
+.project-details-container {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #fff;
+}
+
+.project-details-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.project-content {
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #888;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: 0.3s;
+}
+
+.back-link:hover {
+  color: #00d2ff;
+}
+
+.project-hero {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+.project-info h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.project-domain-tag {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: rgba(0, 210, 255, 0.1);
+  color: #00d2ff;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.tech-stack-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.tech-tag {
+  background: rgba(255,255,255,0.05);
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.project-side-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+.price-tag {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #00d2ff;
+  margin-bottom: 0.5rem;
+}
+
+.buy-now-btn {
+  width: 100%;
+  padding: 1.2rem;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin: 1.5rem 0;
+  transition: 0.3s;
+}
+
+.buy-now-btn:hover {
+  background: #00d2ff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
+}
+
+.project-body {
+  line-height: 1.8;
+  color: #ccc;
+  font-size: 1.1rem;
+}
+
+.project-body h2 {
+  color: #fff;
+  margin: 2.5rem 0 1rem;
+}
+
+@media (max-width: 900px) {
+  .project-hero {
+    grid-template-columns: 1fr;
+  }
+}

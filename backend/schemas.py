@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 from enum import Enum
 
@@ -14,8 +14,8 @@ class CustomRequestStatusSchema(str, Enum):
 
 # User Schemas
 class UserBase(BaseModel):
-    email: str
-    full_name: str
+    email: EmailStr
+    full_name: str = Field(..., min_length=2, max_length=100)
     role: UserRoleSchema
 
 class UserCreate(UserBase):
@@ -28,12 +28,12 @@ class UserResponse(UserBase):
 
 # Project Schemas
 class ProjectBase(BaseModel):
-    title: str
-    description: str
-    domain: str
-    tech_stack: str
-    tier1_price: float
-    tier2_price: float
+    title: str = Field(..., min_length=5, max_length=200)
+    description: str = Field(..., min_length=20)
+    domain: str = Field(..., min_length=2, max_length=50)
+    tech_stack: str = Field(..., min_length=2, max_length=200)
+    tier1_price: float = Field(..., gt=0)
+    tier2_price: float = Field(..., gt=0)
 
 class ProjectCreate(ProjectBase):
     pass
@@ -46,10 +46,10 @@ class ProjectResponse(ProjectBase):
 
 # Custom Request Schemas
 class CustomRequestBase(BaseModel):
-    title: str
-    description: str
-    budget_range: str
-    deadline: str
+    title: str = Field(..., min_length=10, max_length=200)
+    description: str = Field(..., min_length=50)
+    budget_range: str = Field(..., min_length=2, max_length=100)
+    deadline: str = Field(..., min_length=2, max_length=100)
 
 class CustomRequestCreate(CustomRequestBase):
     pass
@@ -58,6 +58,5 @@ class CustomRequestResponse(CustomRequestBase):
     id: int
     status: CustomRequestStatusSchema
     student: UserResponse
-    # bids: List[...] would go here if needed
     class Config:
         from_attributes = True

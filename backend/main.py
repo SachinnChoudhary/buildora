@@ -11,7 +11,7 @@ SENTRY_DSN = os.environ.get("SENTRY_DSN")
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        send_default_pii=True,
+        send_default_pii=False,
         traces_sample_rate=1.0,
     )
 
@@ -37,8 +37,7 @@ allowed_origins = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
     "http://localhost:4173",
-    "null",
-    "file://",
+    # FIX: "null" and "file://" removed to prevent CORS bypass
 ]
 
 app.add_middleware(

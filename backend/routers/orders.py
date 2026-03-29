@@ -54,3 +54,21 @@ def get_my_orders(db: Session = Depends(database.get_db), current_user: models.U
                 "date": "Today" # Mocking date for now
             })
     return result
+
+@router.get("/{order_id}")
+def get_order_details(order_id: int, db: Session = Depends(database.get_db), current_user: models.User = Depends(security.get_current_user)):
+    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # IDOR Check: Ensure the order belongs to the current user
+    if order.buyer_id != current_user.id:
+        raise HTTPException(status_code=403, detail="You do not have permission to access this order")
+    
+    project = db.query(models.Project).filter(models.Project.id == order.project_id).first()
+    return {
+        "order_id": order.id,
+        "amount": order.amount,
+        "status": order.status,
+        "project": project
+    }

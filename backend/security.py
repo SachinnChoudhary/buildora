@@ -50,14 +50,22 @@ def get_current_user(res: HTTPAuthorizationCredentials = Depends(security_scheme
     
     # Auto-create user in DB if they exist in Firebase but not in local DB
     if user is None:
-        user = models.User(
-            email=email,
-            full_name=decoded_token.get("name", email.split('@')[0]),
-            role=models.UserRole.STUDENT # Default role
-        )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
+        try:
+            user = models.User(
+                email=email,
+                full_name=decoded_token.get("name", email.split('@')[0]),
+                role=models.UserRole.STUDENT # Default role
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        except Exception as e:
+            db.rollback()
+            print(f"Database user creation error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Internal server error during user profile creation"
+            )
         
     return user
 

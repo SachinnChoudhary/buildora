@@ -53,6 +53,7 @@ export async function logout() {
     await signOut(auth);
     localStorage.removeItem('buildora_token');
     localStorage.removeItem('buildora_user');
+    localStorage.removeItem('ba_token'); // Clean up old key if exists
 }
 
 export function onAuthChange(callback) {
