@@ -29,6 +29,18 @@
                     <p style="color: var(--text-secondary); margin-top: 8px;">Log in to access your projects and requests</p>
                 </div>
 
+                <!-- Google Sign-In Button -->
+                <button id="googleSignIn" class="btn-lg btn-full" style="margin-bottom: 20px; background: #fff; color: #333; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; transition: all 0.3s ease;">
+                    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Continue with Google
+                </button>
+
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                    <span style="color: var(--text-muted); font-size: 13px;">or sign in with email</span>
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                </div>
+
                 <form id="loginForm" class="contact-form">
                     <div class="form-group">
                         <label for="email">Email Address</label>
@@ -39,13 +51,10 @@
                             <label for="password">Password</label>
                             <a href="#" style="font-size: 13px; color: var(--primary-light); text-decoration: none;">Forgot Password?</a>
                         </div>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" minlength="6">
                     </div>
-                    
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <input type="checkbox" id="remember" style="width: 16px; height: 16px; cursor: pointer;">
-                        <label for="remember" style="font-size: 14px; color: var(--text-secondary); cursor: pointer;">Remember me for 30 days</label>
-                    </div>
+
+                    <div id="authError" style="display: none; color: #ef4444; font-size: 14px; padding: 10px; border-radius: 8px; background: rgba(239,68,68,0.1); margin-top: 8px;"></div>
 
                     <button type="submit" class="btn-primary btn-lg btn-full" style="margin-top: 24px;">Sign In to Dashboard</button>
                     
@@ -59,49 +68,70 @@
 
     <script type="module" src="src/js/script.js"></script>
     <script type="module">
-        import { API_BASE } from './src/js/config.js';
+        import { loginWithEmail, loginWithGoogle, onAuthChange } from './src/js/firebase.js';
 
-        // If already logged in, go to dashboard
-        if (localStorage.getItem('buildora_token')) {
-            window.location.href = 'dashboard.html';
+        // If already logged in, redirect
+        onAuthChange((user) => {
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        const errorDiv = document.getElementById('authError');
+        function showError(msg) {
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
         }
 
+        // Email/Password Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.textContent = 'Signing in...';
             btn.disabled = true;
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            errorDiv.style.display = 'none';
 
             try {
-                // FastAPI OAuth2 login expects form-data with 'username' and 'password'
-                const formData = new FormData();
-                formData.append('username', email);
-                formData.append('password', password);
-
-                const res = await fetch(`${API_BASE}/api/auth/login`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    localStorage.setItem('buildora_token', data.access_token);
-                    window.location.href = 'dashboard.html';
-                } else {
-                    const err = await res.json();
-                    alert(err.detail || 'Login failed. Please check your credentials.');
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                }
+                const user = await loginWithEmail(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                );
+                localStorage.setItem('buildora_user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName
+                }));
+                window.location.href = 'dashboard.html';
             } catch (err) {
-                console.error('Login error:', err);
-                alert('Server is starting up. Please try again in a moment.');
+                const messages = {
+                    'auth/user-not-found': 'No account found with this email.',
+                    'auth/wrong-password': 'Incorrect password.',
+                    'auth/invalid-credential': 'Invalid email or password.',
+                    'auth/too-many-requests': 'Too many attempts. Try again later.',
+                    'auth/invalid-email': 'Invalid email address.'
+                };
+                showError(messages[err.code] || 'Login failed. Please try again.');
                 btn.textContent = originalText;
                 btn.disabled = false;
+            }
+        });
+
+        // Google Sign-In
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            try {
+                const user = await loginWithGoogle();
+                localStorage.setItem('buildora_user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                }));
+                window.location.href = 'dashboard.html';
+            } catch (err) {
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    showError('Google sign-in failed. Try again.');
+                }
             }
         });
     </script>
