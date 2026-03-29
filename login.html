@@ -58,11 +58,51 @@
     </main>
 
     <script type="module" src="src/js/script.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Mock login - redirect to dashboard
+    <script type="module">
+        import { API_BASE } from './src/js/config.js';
+
+        // If already logged in, go to dashboard
+        if (localStorage.getItem('buildora_token')) {
             window.location.href = 'dashboard.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = 'Signing in...';
+            btn.disabled = true;
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // FastAPI OAuth2 login expects form-data with 'username' and 'password'
+                const formData = new FormData();
+                formData.append('username', email);
+                formData.append('password', password);
+
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem('buildora_token', data.access_token);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || 'Login failed. Please check your credentials.');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                alert('Server is starting up. Please try again in a moment.');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
         });
     </script>
 </body>

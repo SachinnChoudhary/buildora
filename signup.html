@@ -64,11 +64,48 @@
     </main>
 
     <script type="module" src="src/js/script.js"></script>
-    <script>
-        document.getElementById('signupForm').addEventListener('submit', (e) => {
+    <script type="module">
+        import { API_BASE } from './src/js/config.js';
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Mock signup - redirect to login
-            window.location.href = 'login.html';
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = 'Creating account...';
+            btn.disabled = true;
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        full_name: `${firstName} ${lastName}`,
+                        password: password,
+                        role: 'student'
+                    })
+                });
+
+                if (res.ok) {
+                    alert('Account created! Please log in.');
+                    window.location.href = 'login.html';
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || 'Signup failed. Please try again.');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Signup error:', err);
+                alert('Server is starting up. Please try again in a moment.');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
