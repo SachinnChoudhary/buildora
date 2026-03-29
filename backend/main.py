@@ -1,9 +1,17 @@
 import os
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from .database import engine
 from .routers import marketplace, custom_requests, auth, orders
+
+# Sentry error tracking
+sentry_sdk.init(
+    dsn="https://2585ead8b99349b43263e945d210a63d@o4511127769776128.ingest.us.sentry.io/4511127778689024",
+    send_default_pii=True,
+    traces_sample_rate=1.0,
+)
 
 models.Base.metadata.create_all(bind=engine)
 
