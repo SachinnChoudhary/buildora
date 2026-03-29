@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="src/css/dashboard.css">
     <style>
         /* Dashboard Specific Glass Overrides */
         .dashboard-body {
@@ -69,7 +69,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="index.html" class="nav-logo">
-                <img src="buildora-logo.svg" alt="Buildora" class="logo-img" style="width: 32px; height: 32px;">
+                <img src="src/assets/buildora-logo.svg" alt="Buildora" class="logo-img" style="width: 32px; height: 32px;">
                 <span class="logo-text">&lt;Buildora/&gt;</span>
             </a>
             <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
@@ -221,7 +221,7 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
-    <script src="dashboard.js"></script>
+    <script type="module" src="src/js/script.js"></script>
+    <script type="module" src="src/js/dashboard.js"></script>
 </body>
 </html>

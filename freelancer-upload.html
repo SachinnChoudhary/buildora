@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="freelancer.css">
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="src/css/dashboard.css">
+    <link rel="stylesheet" href="src/css/freelancer.css">
 </head>
 <body class="dashboard-body freelancer-theme">
     <!-- Cursor Glow -->
@@ -24,7 +24,7 @@
         <!-- Reusing same sidebar structure from freelancer-dashboard.html -->
         <div class="sidebar-header">
             <a href="index.html" class="nav-logo">
-                <img src="buildora-logo.svg" alt="Buildora" class="logo-img">
+                <img src="src/assets/buildora-logo.svg" alt="Buildora" class="logo-img">
                 <span class="logo-text">&lt;Buildora/&gt;</span>
             </a>
             <span class="sidebar-badge developer-badge">Developer</span>
@@ -149,7 +149,7 @@
         </div>
     </main>
 
-    <script src="dashboard.js"></script>
+    <script type="module" src="src/js/dashboard.js"></script>
     <script>
         // Simple mock for dropzone UI
         document.querySelectorAll('.file-dropzone').forEach(dropzone => {
