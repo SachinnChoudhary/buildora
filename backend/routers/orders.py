@@ -72,8 +72,8 @@ async def create_razorpay_order(
             "currency": "INR",
             "key_id": RAZORPAY_KEY_ID
         }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Razorpay order creation failed: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Razorpay order creation failed. Please try again later.")
 
 @router.post("/verify-payment")
 @limiter.limit("5/minute")
@@ -95,7 +95,7 @@ async def verify_payment(
         # Update order status in DB
         order = db.query(models.Order).filter(models.Order.razorpay_order_id == verify_req.razorpay_order_id).first()
         if not order:
-            raise HTTPException(status_code=404, detail="Order not found in database")
+            raise HTTPException(status_code=404, detail="Order not found")
         
         if order.buyer_id != current_user.id:
             raise HTTPException(status_code=403, detail="Unauthorized payment verification")
@@ -106,13 +106,17 @@ async def verify_payment(
         db.commit()
         
         return {"status": "success", "message": "Payment verified and order completed"}
-    except Exception as e:
-        # If verification fails
+    except razorpay.errors.SignatureVerificationError:
+        # Specific handling for signature mismatch
         order = db.query(models.Order).filter(models.Order.razorpay_order_id == verify_req.razorpay_order_id).first()
         if order:
             order.status = "failed"
             db.commit()
-        raise HTTPException(status_code=400, detail="Payment verification failed")
+        raise HTTPException(status_code=400, detail="Invalid payment signature")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500, detail="Payment verification failed due to an internal error")
 
 @router.get("/my-orders")
 def get_my_orders(db: Session = Depends(database.get_db), current_user: models.User = Depends(security.get_current_user)):

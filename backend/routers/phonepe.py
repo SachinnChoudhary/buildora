@@ -70,30 +70,33 @@ async def create_phonepe_order(
         )
         response = phonepe_client.pay(pay_request)
         return {"redirect_url": response.redirect_url, "merchant_order_id": merchant_order_id}
-    except Exception as e:
+    except Exception:
         # Rollback local order if gateway fails
         db.delete(new_order)
         db.commit()
-        raise HTTPException(status_code=500, detail=f"PhonePe order creation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail="PhonePe order creation failed due to an internal error")
 
 @router.get("/status/{merchant_order_id}")
 async def check_phonepe_status(
     merchant_order_id: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """
-    Manually check order status from PhonePe
+    Manually check order status from PhonePe with ownership verification
     """
     try:
-        status_response = phonepe_client.get_order_status(merchant_order_id=merchant_order_id)
-        
-        # Find order in DB
+        # Find order in DB first to check ownership
         order = db.query(Order).filter(Order.merchant_order_id == merchant_order_id).first()
         if not order:
             raise HTTPException(status_code=404, detail="Order not found")
 
+        if order.buyer_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Unauthorized access to order status")
+
+        status_response = phonepe_client.get_order_status(merchant_order_id=merchant_order_id)
+        
         # Update order status based on PhonePe state
-        # states: COMPLETED, FAILED, PENDING, etc. (Check SDK docs for exact enum)
         if status_response.state == "COMPLETED":
             order.status = "completed"
             db.commit()
@@ -102,5 +105,7 @@ async def check_phonepe_status(
             db.commit()
 
         return {"status": status_response.state, "order_id": order.id}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Status check failed: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500, detail="An error occurred while checking payment status")
