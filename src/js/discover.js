@@ -118,20 +118,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- Fetch Data ---
-    try {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">Loading projects from API...</div>';
-        const response = await fetch(`${API_BASE}/api/projects/`);
-        if (response.ok) {
-            projects = await response.json();
-            applyAllFilters();
-        } else {
-            console.error('Failed to fetch projects');
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ef4444;">Failed to load projects. Is the backend running?</div>';
+    async function fetchProjects(retryCount = 0) {
+        try {
+            if (retryCount === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);"><div style="margin-bottom:12px;font-size:1.5rem;">⏳</div>Loading projects...</div>';
+            } else {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);"><div style="margin-bottom:12px;font-size:1.5rem;">🔄</div>Server is waking up... retrying (' + retryCount + '/3)</div>';
+            }
+            const response = await fetch(`${API_BASE}/api/projects/`);
+            if (response.ok) {
+                projects = await response.json();
+                if (projects.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);"><div style="margin-bottom:12px;font-size:1.5rem;">📦</div>No projects available yet. Check back soon!</div>';
+                } else {
+                    applyAllFilters();
+                }
+            } else if (retryCount < 3) {
+                await new Promise(r => setTimeout(r, 3000));
+                return fetchProjects(retryCount + 1);
+            } else {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);"><div style="margin-bottom:12px;font-size:1.5rem;">😴</div>Server is currently starting up. Please refresh in a moment.</div>';
+            }
+        } catch (err) {
+            console.error('API Error:', err);
+            if (retryCount < 3) {
+                await new Promise(r => setTimeout(r, 3000));
+                return fetchProjects(retryCount + 1);
+            }
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);"><div style="margin-bottom:12px;font-size:1.5rem;">😴</div>Server is currently starting up. Please refresh in a moment.</div>';
         }
-    } catch (err) {
-        console.error('API Error:', err);
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ef4444;">Failed to load projects. Is the backend running?</div>';
     }
+    await fetchProjects();
 
     // --- Event Listeners ---
     const searchInput = document.getElementById('searchInput');
