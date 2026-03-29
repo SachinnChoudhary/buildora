@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # Use DATABASE_URL env var for production (Postgres on Supabase/Render)
 # Falls back to local SQLite for development
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./buildora.db")
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./app.db")
 
 # Handle Render/Supabase postgres:// vs postgresql:// URL format
 if DATABASE_URL.startswith("postgres://"):
