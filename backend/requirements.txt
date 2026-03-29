@@ -13,4 +13,5 @@ sentry-sdk[fastapi]
 firebase-admin==6.5.0
 slowapi==0.1.9
 razorpay==2.0.1
-phonepe-sdk==1.1.0
+--extra-index-url https://phonepe.mycloudrepo.io/public/repositories/phonepe-pg-sdk-python
+phonepe_sdk
