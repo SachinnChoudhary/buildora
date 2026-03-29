@@ -21,3 +21,4 @@ export const config = {
   PHONEPE_ENV: import.meta.env.VITE_PHONEPE_ENV || 'SANDBOX'
 };
 
+export default { API_BASE, ...config };
