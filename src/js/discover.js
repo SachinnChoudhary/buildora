@@ -2,6 +2,8 @@
    BUILDORA — Discover Page JavaScript (API Integrated)
    ============================================ */
 
+import { API_BASE } from './config.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Global script.js handles cursor/particles ---
 
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Fetch Data ---
     try {
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">Loading projects from API...</div>';
-        const response = await fetch('http://127.0.0.1:8001/api/projects/');
+        const response = await fetch(`${API_BASE}/api/projects/`);
         if (response.ok) {
             projects = await response.json();
             applyAllFilters();

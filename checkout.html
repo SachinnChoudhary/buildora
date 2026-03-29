@@ -231,6 +231,9 @@
 
     <script type="module" src="src/js/script.js"></script>
     <script>
+        // API Configuration
+        const API_BASE = (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.protocol !== 'file:') ? 'https://buildora-api.onrender.com' : 'http://127.0.0.1:8001';
+
         // Checkout Logic
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode');
@@ -253,7 +256,7 @@
                 payBtn.textContent = 'Pay $19.00 Now';
             } else if (projectId) {
                 try {
-                    const res = await fetch(`http://127.0.0.1:8001/api/projects/${projectId}`);
+                    const res = await fetch(`${API_BASE}/api/projects/${projectId}`);
                     if (res.ok) {
                         const project = await res.json();
                         const price = Math.round(project.tier1_price / 80);

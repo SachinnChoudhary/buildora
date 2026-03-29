@@ -2,6 +2,8 @@
    BUILDORA — Developer Dashboard Logic (API Integrated)
    ============================================ */
 
+import { API_BASE } from './config.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Cursor Glow ---
     const cursorGlow = document.getElementById('cursorGlow');
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         gigListContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-secondary);">Loading open gigs...</div>';
         
         try {
-            const response = await fetch('http://127.0.0.1:8001/api/custom-requests/open');
+            const response = await fetch(`${API_BASE}/api/custom-requests/open`);
             if (!response.ok) throw new Error('Failed to fetch gigs');
             
             const gigs = await response.json();

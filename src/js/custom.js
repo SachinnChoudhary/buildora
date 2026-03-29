@@ -2,6 +2,8 @@
    BUILDORA — Custom Request Logic
    ============================================ */
 
+import { API_BASE } from './config.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Mobile Sidebar ---
     const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
@@ -132,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const response = await fetch('http://127.0.0.1:8001/api/custom-requests/', {
+                const response = await fetch(`${API_BASE}/api/custom-requests/`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',

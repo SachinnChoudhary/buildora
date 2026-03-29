@@ -2,6 +2,8 @@
    BUILDORA — Dashboard JavaScript
    ============================================ */
 
+import { API_BASE } from './config.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Cursor Glow ---
     const cursorGlow = document.getElementById('cursorGlow');
@@ -174,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDashboard() {
         try {
             // Fetch Profile
-            const profileRes = await fetch('http://127.0.0.1:8001/api/auth/me', {
+            const profileRes = await fetch(`${API_BASE}/api/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!profileRes.ok) throw new Error("Profile load failed");
@@ -186,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.user-role').textContent = profile.role === 'student' ? 'Pro Student' : 'Developer';
 
             // Fetch Orders
-            const ordersRes = await fetch('http://127.0.0.1:8001/api/orders/my-orders', {
+            const ordersRes = await fetch(`${API_BASE}/api/orders/my-orders`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (ordersRes.ok) {
