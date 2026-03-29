@@ -63,7 +63,7 @@ const FreelancerDashboardPage = () => {
                 <div className="stats-grid">
                     <div className="stat-card">
                         <h3>Total Earnings</h3>
-                        <div className="value">${stats.total_sales * 50}</div>
+                        <div className="value">₹{stats.total_sales * 50}</div>
                     </div>
                     <div className="stat-card">
                         <h3>Projects Listed</h3>

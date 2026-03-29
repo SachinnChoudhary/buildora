@@ -64,7 +64,7 @@ const LandingPage = () => {
                             <p style={{ color: '#888' }}>Projects Sold</p>
                         </div>
                         <div>
-                            <h4 style={{ fontSize: '2.5rem', color: '#00d2ff' }}>$25k+</h4>
+                            <h4 style={{ fontSize: '2.5rem', color: '#00d2ff' }}>₹20L+</h4>
                             <p style={{ color: '#888' }}>Scholarship Earned</p>
                         </div>
                     </div>

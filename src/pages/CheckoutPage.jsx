@@ -11,9 +11,6 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvv, setCvv] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState(null);
 
@@ -33,13 +30,7 @@ const CheckoutPage = () => {
         fetchProject();
     }, [projectId]);
 
-    const handlePayment = async (e) => {
-        e.preventDefault();
-        if (cardNumber.length < 16) {
-            setError('Please enter a valid 16-digit card number.');
-            return;
-        }
-
+    const handlePayment = async () => {
         setIsProcessing(true);
         setError(null);
 
@@ -47,27 +38,76 @@ const CheckoutPage = () => {
             const auth = getAuth();
             const token = await auth.currentUser?.getIdToken();
             
-            const response = await fetch(`${config.API_BASE_URL}/api/orders/checkout`, {
+            // 1. Create Razorpay Order on Backend
+            const orderResponse = await fetch(`${config.API_BASE_URL}/api/orders/create-razorpay-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    project_id: parseInt(projectId),
-                    card_number: cardNumber
-                })
+                body: JSON.stringify({ project_id: parseInt(projectId) })
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.detail || 'Payment failed');
+            if (!orderResponse.ok) {
+                const errorData = await orderResponse.json();
+                throw new Error(errorData.detail || 'Failed to initialize payment');
             }
 
-            navigate('/dashboard', { state: { message: 'Purchase successful!' } });
+            const orderData = await orderResponse.json();
+
+            // 2. Configure Razorpay Options
+            const options = {
+                key: orderData.key_id,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "Buildora Marketplace",
+                description: `Purchase: ${project.title}`,
+                order_id: orderData.order_id,
+                handler: async (response) => {
+                    // 3. Verify Payment on Backend
+                    try {
+                        const verifyResponse = await fetch(`${config.API_BASE_URL}/api/orders/verify-payment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
+
+                        if (verifyResponse.ok) {
+                            navigate('/dashboard', { state: { message: 'Purchase successful!' } });
+                        } else {
+                            throw new Error('Payment verification failed');
+                        }
+                    } catch (err) {
+                        setError(err.message);
+                        setIsProcessing(false);
+                    }
+                },
+                prefill: {
+                    name: auth.currentUser?.displayName || "",
+                    email: auth.currentUser?.email || "",
+                },
+                theme: {
+                    color: "#6366f1",
+                },
+                modal: {
+                    ondismiss: () => {
+                        setIsProcessing(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
         } catch (err) {
             setError(err.message);
-        } finally {
             setIsProcessing(false);
         }
     };
@@ -84,83 +124,71 @@ const CheckoutPage = () => {
 
                 <div className="checkout-content">
                     <section className="payment-section">
-                        <h2 className="checkout-title">Payment Method</h2>
-                        
-                        {error && <div style={{ color: '#ff4d4d', marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,77,77,0.1)', borderRadius: '10px' }}>{error}</div>}
-
-                        <form className="payment-form" onSubmit={handlePayment}>
-                            <div className="form-group">
-                                <label>Cardholder Name</label>
-                                <input type="text" placeholder="John Doe" required />
-                            </div>
+                        <div className="payment-card-status">
+                            <div className="shield-icon">🛡️</div>
+                            <h2 className="checkout-title">Secure Checkout</h2>
+                            <p className="checkout-subtitle">Secure payment via Razorpay. Fast, safe, and reliable.</p>
                             
-                            <div className="form-group">
-                                <label>Card Number</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="0000 0000 0000 0000" 
-                                    maxLength="16"
-                                    value={cardNumber}
-                                    onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, ''))}
-                                    required 
-                                />
-                            </div>
+                            {error && <div className="error-alert">{error}</div>}
 
-                            <div className="card-details">
-                                <div className="form-group">
-                                    <label>Expiry Date</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="MM/YY" 
-                                        maxLength="5"
-                                        value={expiry}
-                                        onChange={(e) => setExpiry(e.target.value)}
-                                        required 
-                                    />
+                            <div className="payment-details-box">
+                                <div className="detail-row">
+                                    <span>Currency</span>
+                                    <span>INR (Indian Rupee)</span>
                                 </div>
-                                <div className="form-group">
-                                    <label>CVV</label>
-                                    <input 
-                                        type="password" 
-                                        placeholder="***" 
-                                        maxLength="3"
-                                        value={cvv}
-                                        onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
-                                        required 
-                                    />
+                                <div className="detail-row">
+                                    <span>Method</span>
+                                    <span>UPI / Card / Netbanking</span>
                                 </div>
                             </div>
 
-                            <button type="submit" className="pay-btn" disabled={isProcessing}>
-                                {isProcessing ? 'Processing...' : `Pay $${project.tier1_price}`}
+                            <button 
+                                onClick={handlePayment} 
+                                className="pay-btn primary" 
+                                disabled={isProcessing}
+                            >
+                                {isProcessing ? (
+                                    <>
+                                        <span className="spinner"></span>
+                                        Initializing...
+                                    </>
+                                ) : (
+                                    `Proceed to Pay ₹${project.tier1_price}`
+                                )}
                             </button>
-                        </form>
+                            
+                            <p className="trust-footer">
+                                🔒 Your data is protected with 256-bit encryption.
+                            </p>
+                        </div>
                     </section>
 
                     <section className="summary-section">
-                        <h2 style={{ marginBottom: '1.5rem' }}>Order Summary</h2>
+                        <h2 style={{ marginBottom: '1.5rem', color: 'white' }}>Order Summary</h2>
                         <div className="checkout-info">
-                            <h3>{project.title}</h3>
-                            <p>{project.domain}</p>
+                            <h3 style={{ color: '#6366f1' }}>{project.title}</h3>
+                            <p style={{ color: '#aaa' }}>{project.domain}</p>
                         </div>
 
                         <div className="summary-row">
-                            <span>Subtotal</span>
-                            <span>${project.tier1_price}</span>
+                            <span>Project Price</span>
+                            <span>₹{project.tier1_price}</span>
                         </div>
                         <div className="summary-row">
                             <span>Platform Fee</span>
-                            <span>$0.00</span>
+                            <span>₹0.00</span>
                         </div>
                         
                         <div className="summary-row summary-total">
-                            <span>Total</span>
-                            <span>${project.tier1_price}</span>
+                            <span>Total Amount</span>
+                            <span>₹{project.tier1_price}</span>
                         </div>
 
-                        <p style={{ marginTop: '2rem', fontSize: '0.8rem', color: '#666', textAlign: 'center' }}>
-                            Secure payment powered by Buildora Pay 🛡️
-                        </p>
+                        <div className="purchase-benefits">
+                            <p>✅ Instant access after payment</p>
+                            <p>✅ Full documentation included</p>
+                            <p>✅ 24/7 priority support</p>
+                        </div>
                     </section>
                 </div>
             </main>

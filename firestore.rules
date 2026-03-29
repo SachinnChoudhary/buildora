@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Projects: Anyone can view, only developers can create/update
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'DEVELOPER';
+      allow delete: if isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'DEVELOPER' &&
+        resource.data.owner_id == request.auth.uid;
+    }
+
+    // Orders: Only the buyer or admin can see their orders
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (resource.data.buyer_id == request.auth.uid || 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN');
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Orders should be immutable once placed
+    }
+
+    // Custom Requests: Only the student/buyer can see their requests
+    match /custom_requests/{requestId} {
+      allow read: if isAuthenticated() && (resource.data.student_id == request.auth.uid || 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN');
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && resource.data.student_id == request.auth.uid;
+    }
+
+    // User Profiles: Users can only read/write their own profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+  }
+}

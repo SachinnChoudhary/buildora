@@ -80,7 +80,7 @@ const ProjectDetailsPage = () => {
                         </div>
 
                         <div className="project-side-card">
-                            <div className="price-tag">${project.tier1_price}</div>
+                            <div className="price-tag">₹{project.tier1_price}</div>
                             <p style={{ color: '#888', fontSize: '0.9rem' }}>One-time payment for full source code and documentation.</p>
                             
                             <button 
@@ -90,7 +90,7 @@ const ProjectDetailsPage = () => {
                                 Buy Project Now
                             </button>
 
-                            <ul style={{ list-style: 'none', padding: 0, fontSize: '0.9rem', color: '#ccc' }}>
+                            <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: '#ccc' }}>
                                 <li style={{ marginBottom: '0.5rem' }}>✅ Full Source Code</li>
                                 <li style={{ marginBottom: '0.5rem' }}>✅ Setup Documentation</li>
                                 <li style={{ marginBottom: '0.5rem' }}>✅ Developer Support</li>

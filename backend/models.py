@@ -40,7 +40,10 @@ class Order(Base):
     project_id = Column(Integer, ForeignKey("projects.id"))
     buyer_id = Column(Integer, ForeignKey("users.id"))
     amount = Column(Float)
-    status = Column(String, default="completed") # processing, completed, failed
+    status = Column(String, default="pending") # pending, completed, failed
+    razorpay_order_id = Column(String, nullable=True)
+    razorpay_payment_id = Column(String, nullable=True)
+    razorpay_signature = Column(String, nullable=True)
     
     project = relationship("Project", back_populates="orders")
     buyer = relationship("User", back_populates="orders")

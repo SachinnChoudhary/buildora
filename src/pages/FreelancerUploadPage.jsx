@@ -153,7 +153,7 @@ const FreelancerUploadPage = () => {
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                     <div className="form-group">
-                                        <label>Basic Price ($)</label>
+                                        <label>Basic Price (₹)</label>
                                         <input 
                                             type="number" 
                                             name="tier1_price" 
@@ -165,7 +165,7 @@ const FreelancerUploadPage = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Premium Price ($)</label>
+                                        <label>Premium Price (₹)</label>
                                         <input 
                                             type="number" 
                                             name="tier2_price" 

@@ -1,0 +1,37 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Project Thumbnails: Publicly readable, writeable by Developers
+    match /project-thumbnails/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'DEVELOPER';
+    }
+
+    // Project Files (Source Code): Readable only by owners or buyers
+    // Note: We check if the user has an 'order' for this project in Firestore
+    match /project-files/{projectId}/{allPaths=**} {
+      allow read: if isAuthenticated() && (
+        firestore.get(/databases/(default)/documents/projects/$(projectId)).data.owner_id == request.auth.uid ||
+        firestore.exists(/databases/(default)/documents/orders/$(request.auth.uid + "_" + projectId))
+      );
+      allow write: if isAuthenticated() &&
+        firestore.get(/databases/(default)/documents/projects/$(projectId)).data.owner_id == request.auth.uid;
+    }
+
+    // User Uploads (e.g., custom request assets)
+    match /user-uploads/{userId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+  }
+}

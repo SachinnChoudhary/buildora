@@ -131,7 +131,7 @@ const CustomRequestPage = () => {
                                         <input 
                                             type="text" 
                                             name="budget_range" 
-                                            placeholder="e.g., $100 - $200"
+                                            placeholder="e.g., ₹5000 - ₹10000"
                                             value={formData.budget_range}
                                             onChange={handleChange}
                                         />

@@ -115,7 +115,7 @@ const MarketplacePage = () => {
                                 <h3 className="project-title">{project.title}</h3>
                                 <p className="project-desc">{project.description.substring(0, 100)}...</p>
                                 <div className="project-footer">
-                                    <div className="project-price">${project.tier1_price}</div>
+                                    <div className="project-price">₹{project.tier1_price}</div>
                                     <Link to={`/project/${project.id}`} className="view-btn">View Details</Link>
                                 </div>
                             </div>

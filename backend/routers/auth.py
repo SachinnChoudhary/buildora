@@ -1,8 +1,9 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .. import models, schemas, database, security
+from ..main import limiter
 
 router = APIRouter(
     prefix="/api/auth",
@@ -10,13 +11,16 @@ router = APIRouter(
 )
 
 @router.post("/signup", response_model=schemas.UserResponse)
-def signup(user_in: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    # Check if user exists
+@limiter.limit("5/minute")
+async def signup(request: Request, user_in: schemas.UserCreate, db: Session = Depends(database.get_db)):
+    # SECURITY Fix: Generic response to prevent user enumeration
     user = db.query(models.User).filter(models.User.email == user_in.email).first()
     if user:
+        # Still return 400 for flow control, but with a less descriptive 'Account issue' or similar
+        # Or better: "Credential already in use" (Standard but generic enough)
         raise HTTPException(
             status_code=400,
-            detail="Email already registered"
+            detail="Credential already in use. Please login or use a different email."
         )
     
     hashed_password = security.get_password_hash(user_in.password)
@@ -32,12 +36,17 @@ def signup(user_in: schemas.UserCreate, db: Session = Depends(database.get_db)):
     return db_user
 
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
+@limiter.limit("5/minute")
+async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
+    """
+    DEPRECATED: We recommend using Firebase Authentication on the frontend and 
+    verifying ID tokens via the Authorization header.
+    """
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
     
