@@ -1,9 +1,4 @@
-/* ============================================
-   BUILDORA — Landing Page Styles
-   Scoped under .landing-container to avoid
-   conflict with global style.css
-   ============================================ */
-
+/* landing.css */
 :root {
   --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
   --secondary-glow: linear-gradient(
@@ -12,8 +7,8 @@
     rgba(1, 65, 255, 0),
     rgba(1, 65, 255, 0.3)
   );
-  --landing-glass: rgba(255, 255, 255, 0.05);
-  --landing-border: rgba(255, 255, 255, 0.1);
+  --glass: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 .landing-container {
@@ -35,28 +30,24 @@
   left: -100px;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 0;
 }
 
-/* ---- Nav ---- */
-.landing-container .navbar {
+/* Nav */
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 5%;
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
   width: 100%;
   z-index: 1000;
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.5);
-  border-bottom: 1px solid var(--landing-border);
-  box-sizing: border-box;
+  border-bottom: 1px solid var(--border);
 }
 
-.landing-container .nav-logo {
+.nav-logo {
   font-size: 1.8rem;
   font-weight: 800;
   background: linear-gradient(45deg, #00d2ff, #3a7bd5);
@@ -64,7 +55,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.landing-container .nav-links a {
+.nav-links a {
   color: #fff;
   text-decoration: none;
   margin-left: 2rem;
@@ -73,122 +64,90 @@
   transition: 0.3s;
 }
 
-.landing-container .nav-links a:hover {
+.nav-links a:hover {
   opacity: 1;
   text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
 }
 
-.landing-container .nav-btn {
-  background: #fff !important;
-  color: #000 !important;
-  -webkit-text-fill-color: #000;
+.nav-btn {
+  background: #fff;
+  color: #000;
   padding: 0.6rem 1.4rem;
   border-radius: 50px;
   font-weight: 600;
   transition: 0.3s;
-  opacity: 1;
 }
 
-.landing-container .nav-btn:hover {
+.nav-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-/* ---- Hero ---- */
-.landing-container .hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Hero */
+.hero {
   padding: 12rem 5% 8rem;
   text-align: center;
   max-width: 1000px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  min-height: auto;
-  gap: 0;
 }
 
-.landing-container .hero h1 {
+.hero h1 {
   font-size: clamp(2.5rem, 8vw, 5rem);
   line-height: 1.1;
   font-weight: 900;
   margin-bottom: 2rem;
   letter-spacing: -0.02em;
-  max-width: 100%;
 }
 
-.landing-container .gradient-text {
+.gradient-text {
   background: linear-gradient(to right, #fff, #888);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.landing-container .hero p {
+.hero p {
   font-size: 1.25rem;
   color: #aaa;
   margin-bottom: 3rem;
   line-height: 1.6;
-  max-width: 600px;
 }
 
-.landing-container .hero-btns {
+.hero-btns {
   display: flex;
   gap: 1.5rem;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
-.landing-container .btn-primary {
+.btn-primary {
   background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-  color: #fff;
-  -webkit-text-fill-color: #fff;
   padding: 1rem 2.5rem;
   border-radius: 12px;
   font-weight: 700;
   font-size: 1.1rem;
   box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
-  text-decoration: none;
-  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.landing-container .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(0, 210, 255, 0.4);
-}
-
-.landing-container .btn-secondary {
-  border: 1px solid var(--landing-border);
-  background: var(--landing-glass);
-  color: #fff;
-  -webkit-text-fill-color: #fff;
+.btn-secondary {
+  border: 1px solid var(--border);
+  background: var(--glass);
   padding: 1rem 2.5rem;
   border-radius: 12px;
   font-weight: 700;
   backdrop-filter: blur(5px);
-  text-decoration: none;
-  transition: transform 0.3s, border-color 0.3s;
 }
 
-.landing-container .btn-secondary:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-/* ---- Bento Grid ---- */
-.landing-container .bento-grid {
+/* Bento Grid */
+.bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 250px;
   gap: 1.5rem;
   padding: 0 5% 10rem;
-  position: relative;
-  z-index: 1;
 }
 
-.landing-container .bento-item {
-  background: var(--landing-glass);
-  border: 1px solid var(--landing-border);
+.bento-item {
+  background: var(--glass);
+  border: 1px solid var(--border);
   border-radius: 24px;
   padding: 2.5rem;
   position: relative;
@@ -196,17 +155,17 @@
   transition: 0.4s ease;
 }
 
-.landing-container .bento-item:hover {
+.bento-item:hover {
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-5px);
 }
 
-.landing-container .bento-1 { grid-column: span 2; grid-row: span 2; }
-.landing-container .bento-2 { grid-column: span 2; grid-row: span 1; }
-.landing-container .bento-3 { grid-column: span 1; grid-row: span 1; }
-.landing-container .bento-4 { grid-column: span 1; grid-row: span 1; }
+.bento-1 { grid-column: span 2; grid-row: span 2; }
+.bento-2 { grid-column: span 2; grid-row: span 1; }
+.bento-3 { grid-column: span 1; grid-row: span 1; }
+.bento-4 { grid-column: span 1; grid-row: span 1; }
 
-.landing-container .bento-icon {
+.bento-icon {
   width: 50px;
   height: 50px;
   background: rgba(255, 255, 255, 0.1);
@@ -218,37 +177,24 @@
   font-size: 1.5rem;
 }
 
-.landing-container .bento-item h3 {
+.bento-item h3 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
 }
 
-.landing-container .bento-item p {
+.bento-item p {
   color: #888;
   line-height: 1.6;
 }
 
-/* ---- Responsive ---- */
 @media (max-width: 900px) {
-  .landing-container .bento-grid {
+  .bento-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .landing-container .bento-1 { grid-column: span 2; grid-row: span 1; }
 }
 
 @media (max-width: 600px) {
-  .landing-container .bento-grid {
+  .bento-grid {
     grid-template-columns: 1fr;
-  }
-  .landing-container .bento-1,
-  .landing-container .bento-2 {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-  .landing-container .hero {
-    padding: 10rem 5% 5rem;
-  }
-  .landing-container .hero h1 {
-    font-size: 2.2rem;
   }
 }
