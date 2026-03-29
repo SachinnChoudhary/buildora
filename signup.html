@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — Buildora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Background Elements -->
+    <div class="hero-bg-grid"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+
+    <main class="auth-hero">
+        <div class="login-container">
+            <div class="form-glass" data-aos="fade-up">
+                <div class="login-header">
+                    <a href="index.html" class="nav-logo">
+                        <img src="buildora-logo.svg" alt="Buildora" class="logo-img" style="width: 48px; height: 48px;">
+                        <span class="logo-text" style="font-size: 28px;">&lt;Buildora/&gt;</span>
+                    </a>
+                    <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; margin-top: 16px;">Create Account</h1>
+                    <p style="color: var(--text-secondary); margin-top: 8px;">Join the premium marketplace for academic excellence</p>
+                </div>
+
+                <form id="signupForm" class="contact-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="name@college.edu" required autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Create Password</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                    </div>
+
+                    <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-top: 8px;">By signing up, you agree to our <a href="terms.html" style="color: var(--primary-light);">Terms</a> and <a href="privacy.html" style="color: var(--primary-light);">Privacy</a>.</p>
+
+                    <button type="submit" class="btn-primary btn-lg btn-full" style="margin-top: 24px;">Start Your Journey 🚀</button>
+                    
+                    <div style="text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 15px;">
+                        Already part of Buildora? <a href="login.html" style="color: var(--primary-light); font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--primary-light);">Log In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Mock signup - redirect to login
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

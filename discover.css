@@ -1,0 +1,309 @@
+/* ============================================
+   BUILDORA — Discover Page Styles
+   ============================================ */
+
+.discover-layout {
+    display: flex;
+    gap: 24px;
+    padding: 28px 32px;
+}
+
+/* --- Filters Panel --- */
+.filters-panel {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: sticky;
+    top: 96px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+.filter-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.filter-section:last-of-type { border-bottom: none; margin-bottom: 0; }
+.filter-section h3 {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.filter-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+.filter-check:hover {
+    background: var(--glass);
+    color: var(--text-primary);
+}
+.filter-check input[type="checkbox"] { display: none; }
+.checkmark {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border: 2px solid var(--glass-border);
+    border-radius: 4px;
+    position: relative;
+    transition: var(--transition);
+}
+.filter-check input:checked + .checkmark {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+.filter-check input:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.tech-filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.tech-filter-tag {
+    padding: 5px 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-body);
+}
+.tech-filter-tag:hover { border-color: var(--surface-border); }
+.tech-filter-tag.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+/* --- Discover Main --- */
+.discover-main { flex: 1; }
+.discover-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.results-count {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+.results-count strong { color: var(--text-primary); }
+.sort-select {
+    padding: 8px 16px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    outline: none;
+    transition: var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+.sort-select option { background: var(--bg-secondary); }
+.sort-select:focus { border-color: var(--primary); }
+
+/* --- AI Recommendation Banner --- */
+.ai-rec-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(249,115,22,0.1));
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    animation: fadeInUp 0.5s ease both;
+}
+.ai-rec-icon { font-size: 28px; }
+.ai-rec-text { flex: 1; }
+.ai-rec-text h3 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.ai-rec-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.btn-sm { padding: 8px 16px; font-size: 13px; white-space: nowrap; }
+
+/* --- Discover Grid --- */
+.discover-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* --- Discover Project Card --- */
+.disc-project-card {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: var(--transition);
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+.disc-card-link-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+}
+.disc-project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--surface-border);
+    box-shadow: 0 0 30px rgba(124,58,237,0.15);
+}
+.disc-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+.disc-domain {
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.disc-domain.ai { background: rgba(124,58,237,0.2); color: var(--primary-light); }
+.disc-domain.web { background: rgba(59,130,246,0.2); color: #60A5FA; }
+.disc-domain.iot { background: rgba(16,185,129,0.2); color: var(--success); }
+.disc-domain.blockchain { background: rgba(249,115,22,0.2); color: var(--accent-light); }
+.disc-domain.mobile { background: rgba(236,72,153,0.2); color: #F472B6; }
+.disc-domain.data { background: rgba(245,158,11,0.2); color: #FBBF24; }
+.disc-domain.cloud { background: rgba(6,182,212,0.2); color: #22D3EE; }
+.disc-domain.cyber { background: rgba(239,68,68,0.2); color: #F87171; }
+
+.disc-difficulty {
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+}
+.disc-difficulty.mini { background: rgba(16,185,129,0.15); color: var(--success); }
+.disc-difficulty.major { background: rgba(124,58,237,0.15); color: var(--primary-light); }
+.disc-difficulty.saas { background: rgba(249,115,22,0.15); color: var(--accent-light); }
+
+.disc-project-card h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.disc-project-card > p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    flex: 1;
+}
+.disc-tech-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.disc-tech-pill {
+    padding: 3px 10px;
+    font-size: 11px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+}
+.disc-card-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.disc-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+.disc-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.disc-old-price {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+.disc-current-price {
+    font-size: 18px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.disc-buy-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* --- Load More --- */
+.load-more-wrapper {
+    text-align: center;
+    margin-top: 32px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .filters-panel { display: none; }
+    .discover-layout { padding: 20px 16px; }
+}
+@media (max-width: 768px) {
+    .discover-grid { grid-template-columns: 1fr; }
+    .discover-topbar { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .ai-rec-banner { flex-direction: column; text-align: center; }
+}

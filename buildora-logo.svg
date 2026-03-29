@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <defs>
+        <linearGradient id="b-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7C3AED" /> <!-- Deep Purple -->
+            <stop offset="40%" stop-color="#C026D3" /> <!-- Magenta -->
+            <stop offset="100%" stop-color="#F97316" /> <!-- Electric Orange -->
+        </linearGradient>
+        <linearGradient id="stem-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#A78BFA" />
+            <stop offset="100%" stop-color="#FDBA74" />
+        </linearGradient>
+        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        <filter id="hyper-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feComponentTransfer in="blur" result="glow">
+                <feFuncA type="linear" slope="0.5"/>
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode in="glow"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <g transform="translate(6, 0)" filter="url(#hyper-glow)">
+        <!-- Vertical Stem -->
+        <line x1="20" y1="18" x2="20" y2="82" stroke="url(#stem-grad)" stroke-width="12" stroke-linecap="round" />
+        
+        <!-- Top Bracket '>' -->
+        <path d="M 20 22 L 60 36 L 20 50" fill="none" stroke="url(#b-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+        
+        <!-- Bottom Bracket '>' -->
+        <path d="M 20 48 L 72 65 L 20 80" fill="none" stroke="url(#b-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+        
+        <!-- Top decorative dot -->
+        <circle cx="85" cy="22" r="4" fill="#7C3AED" />
+        <!-- Bottom decorative dot (caret) -->
+        <path d="M 80 82 L 85 75 L 90 82 Z" fill="#F97316" />
+    </g>
+</svg>

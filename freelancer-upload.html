@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Project — Buildora Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="freelancer.css">
+</head>
+<body class="dashboard-body freelancer-theme">
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Background Elements -->
+    <div class="hero-bg-grid"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar sidebar-glass" id="sidebar">
+        <!-- Reusing same sidebar structure from freelancer-dashboard.html -->
+        <div class="sidebar-header">
+            <a href="index.html" class="nav-logo">
+                <img src="buildora-logo.svg" alt="Buildora" class="logo-img">
+                <span class="logo-text">&lt;Buildora/&gt;</span>
+            </a>
+            <span class="sidebar-badge developer-badge">Developer</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-section-label">Developer Hub</span>
+                <a href="freelancer-dashboard.html" class="sidebar-link" id="navFreelanceDash">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    <span>Overview</span>
+                </a>
+                <a href="freelancer-dashboard.html#gig-board" class="sidebar-link" id="navGigBoard">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span>Find Gigs</span>
+                </a>
+                <a href="freelancer-upload.html" class="sidebar-link active" id="navUploadProject">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>Upload Project</span>
+                </a>
+                <a href="#" class="sidebar-link" id="navEarnings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>Earnings & Payouts</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-greeting">
+                <h1>Upload to <span class="gradient-text">Marketplace</span> 🚀</h1>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="upload-container glass-dashboard-card">
+                <div class="upload-header">
+                    <h1>Sell Your Project <span class="gradient-text">Template</span></h1>
+                    <p class="text-secondary">Reach thousands of students looking for academic project templates. Earn 70% revenue share on every sale.</p>
+                </div>
+
+                <form id="uploadProjectForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="upload-form-group">
+                            <label for="projectTitle">Project Title</label>
+                            <input type="text" id="projectTitle" class="upload-form-control" placeholder="e.g. AI Attendance System" required>
+                        </div>
+                        <div class="upload-form-group">
+                            <label for="domain">Academic Domain</label>
+                            <select id="domain" class="upload-form-control" required>
+                                <option value="" disabled selected>Select Domain</option>
+                                <option value="machine-learning">Machine Learning & AI</option>
+                                <option value="web-dev">Full Stack Web Development</option>
+                                <option value="blockchain">Blockchain & Crypto</option>
+                                <option value="iot">Internet of Things (IoT)</option>
+                                <option value="cyber">Cybersecurity</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="upload-form-group">
+                        <label for="techStack">Tech Stack</label>
+                        <input type="text" id="techStack" class="upload-form-control" placeholder="e.g. Python, Flask, OpenCV (comma separated)" required>
+                    </div>
+
+                    <div class="upload-form-group">
+                        <label for="projectDesc">Project Description & Features</label>
+                        <textarea id="projectDesc" class="upload-form-control" placeholder="Describe the problem it solves, key features, and why it's a good academic project." rows="5" required></textarea>
+                    </div>
+
+                    <!-- Pricing Tiers -->
+                    <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border: 1px solid rgba(255,255,255,0.05);">
+                        <h3 style="margin-bottom: 1rem; color: #E2E8F0; font-size: 1.1rem;">Set Pricing</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="upload-form-group">
+                                <label for="basicPrice">Tier 1: Source Code Only</label>
+                                <div class="price-input-wrapper">
+                                    <span class="price-symbol">₹</span>
+                                    <input type="number" id="basicPrice" class="upload-form-control" placeholder="999" min="499" required>
+                                </div>
+                            </div>
+                            <div class="upload-form-group">
+                                <label for="premiumPrice">Tier 2: Code + Report + Docs</label>
+                                <div class="price-input-wrapper">
+                                    <span class="price-symbol">₹</span>
+                                    <input type="number" id="premiumPrice" class="upload-form-control" placeholder="1499" min="999" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Uploads -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="upload-form-group">
+                            <label>Source Code (ZIP)</label>
+                            <div class="file-dropzone" id="codeDropzone">
+                                <svg class="file-dropzone-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.6-2-2.4-3.5-4.4-3.5h-1.2c-.7-3-3.2-5.2-6.2-5.6-3-.3-5.9 1.3-7.3 4-1.2 2.5-1 6.5.5 8.8m8.7-1.6V21"/><path d="M16 16l-4-4-4 4"/></svg>
+                                <p>Click or drag full source code ZIP here</p>
+                                <span class="file-dropzone-hint">Includes code, requirements.txt, and setup instructions.</span>
+                                <input type="file" hidden id="codeFile" accept=".zip,.rar">
+                            </div>
+                        </div>
+                        <div class="upload-form-group">
+                            <label>Project Report (PDF/DOCX) — Optional</label>
+                            <div class="file-dropzone" id="reportDropzone">
+                                <svg class="file-dropzone-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                                <p>Upload formatting academic report</p>
+                                <span class="file-dropzone-hint">Required for Tier 2 sales.</span>
+                                <input type="file" hidden id="reportFile" accept=".pdf,.doc,.docx">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upload-submit-row">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="publishBtn">Submit for Review</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+    <script>
+        // Simple mock for dropzone UI
+        document.querySelectorAll('.file-dropzone').forEach(dropzone => {
+            const input = dropzone.querySelector('input');
+            const pt = dropzone.querySelector('p');
+            
+            dropzone.addEventListener('click', () => input.click());
+            
+            input.addEventListener('change', (e) => {
+                if(e.target.files.length > 0) {
+                    dropzone.style.borderColor = '#10B981';
+                    dropzone.style.background = 'rgba(16, 185, 129, 0.05)';
+                    pt.innerHTML = `<span style="color:#10B981;">✓ ${e.target.files[0].name}</span>`;
+                }
+            });
+        });
+
+        document.getElementById('uploadProjectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('projectTitle').value;
+            const domain = document.getElementById('domain').value;
+            const techStack = document.getElementById('techStack').value;
+            const desc = document.getElementById('projectDesc').value;
+            const basicPrice = document.getElementById('basicPrice').value;
+            const premiumPrice = document.getElementById('premiumPrice').value;
+
+            // Simple validation
+            if(!title || !domain || !techStack || !desc || !basicPrice || !premiumPrice) {
+                alert('Please fill out all project details and pricing tiers.');
+                return;
+            }
+
+            const payload = {
+                title: title,
+                description: desc,
+                domain: domain,
+                tech_stack: techStack,
+                tier1_price: parseFloat(basicPrice),
+                tier2_price: parseFloat(premiumPrice)
+            };
+
+            const btn = document.getElementById('publishBtn');
+            const originalText = btn.textContent;
+            btn.innerHTML = `Uploading... <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;vertical-align:middle;margin-left:8px;animation:spin 1s linear infinite;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="currentColor"></circle></svg>`;
+            btn.disabled = true;
+
+            const token = localStorage.getItem('ba_token');
+            if(!token) {
+                alert("Please log in as a developer to upload a project.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8001/api/projects/upload', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    btn.innerHTML = "✓ Published Automatically";
+                    btn.style.background = "#10B981";
+                    setTimeout(() => window.location.href="freelancer-dashboard.html", 1500);
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.detail || 'Failed to upload project.'));
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection error. Is the backend running?');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
