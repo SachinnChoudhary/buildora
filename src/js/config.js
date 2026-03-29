@@ -12,5 +12,5 @@ const isProd = window.location.hostname !== 'localhost'
             && window.location.protocol !== 'file:';
 
 export const API_BASE = isProd
-  ? 'https://buildora-api.onrender.com'  // ← Update this after Render deploy
+  ? 'https://buildora-api-lqlk.onrender.com'
   : 'http://127.0.0.1:8001';
