@@ -14,15 +14,15 @@ import {
     updateProfile
 } from "firebase/auth";
 
-// Firebase configuration
+// Firebase configuration - loaded from environment variables
 const firebaseConfig = {
-    apiKey: "AIzaSyBqGhom9lQNzQ7M9Jn2Z7myjB7kCaMexeo",
-    authDomain: "buildora-d2a04.firebaseapp.com",
-    projectId: "buildora-d2a04",
-    storageBucket: "buildora-d2a04.firebasestorage.app",
-    messagingSenderId: "879594754068",
-    appId: "1:879594754068:web:f22ac181f0e4a292405701",
-    measurementId: "G-1BEJP01XRZ"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
